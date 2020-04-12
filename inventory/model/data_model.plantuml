@@ -1,0 +1,108 @@
+@startuml
+
+class Item {
+	+ itemId : integer
+	+ itemName : String
+	+ serialNumber : String
+	+ productNumber : String
+	+ purchased : Date
+	+ warantyUntil : Date
+	+ owner : String
+	+ lendOutTo : String
+}
+
+class User {
+	+ username : string
+	+ firstname : string
+	+ lastname : string
+}
+
+class Stock {
+	+ itemId : integer
+	+ storageLocationId : integer
+	+ count : integer
+}
+
+class Address {
+	+ addressId : integer
+	+ street : String
+	+ number : String
+	+ zipCode : Integer
+	+ city : Integer
+	+ state : String
+	+ country : CountryCode
+}
+
+class Room {
+	+ roomId : integer
+	+ number : String
+	+ name : String
+	+ addressId : integer 
+}
+
+class StorageLocation {
+	+ storageLocationId : integer
+	+ roomId : integer
+	+ name : String
+}
+
+class Media {
+    + mediaHash : String
+	+ Name : String
+	+ MimeType : String
+}
+
+enum AttachmentType {
+	DATA_SHEET
+	MANUAL
+	PRODUCT_PHOTO
+	LOCATION_PHOTO
+    RECEIPT
+	REPAIR_INSTRUCTIONS
+	WARANTY
+}
+
+class ItemAttachment {
+	+ itemId : integer
+	+ mediaHash : String
+	+ AttachmentType : Enum
+}
+
+class StorageLocationAttachment {
+	+ storageLocationId : integer
+	+ mediaHash : String
+	+ AttachmentType : Enum
+}
+
+class Category {
+	+ categoryId : integer
+	+ name : String
+	+ parentCategoryId : integer
+}
+
+class ItemCategory {
+	+ itemId : integer
+	+ categoryId : integer
+}
+
+Item "*" --> "1" User : owner
+Item "*" --> "1" User : lender
+Item <-- Stock : in stock
+Stock --> StorageLocation : filed location
+
+StorageLocation "*" -r-> "1" Room
+Room "*" -r-> "1" Address
+
+ItemAttachment -r-> Item
+ItemAttachment -l-> Media
+ItemAttachment -d-> AttachmentType
+
+StorageLocationAttachment -d-> StorageLocation
+StorageLocationAttachment -u-> Media
+StorageLocationAttachment -r-> AttachmentType
+
+ItemCategory -l-> Item
+ItemCategory -r-> Category
+Category --> Category : parent
+
+@enduml
